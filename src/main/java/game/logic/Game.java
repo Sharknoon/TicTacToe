@@ -28,15 +28,13 @@ public class Game {
     private final Pitch pitch = new Pitch();
     private final HashMap<String, PlayerManager> gameMemberList = new HashMap<>();
     private final GameDatabase gameDatabase;
-    private InstanceManager iManager;
     private Timeline timeline;
 
-    public Game(InstanceManager pIManager, PlayerManager pPlayer1, PlayerManager pPlayer2) {
-        iManager = pIManager;
+    public Game(PlayerManager pPlayer1, PlayerManager pPlayer2) {
         this.player1 = pPlayer1;
         this.player2 = pPlayer2;
-        this.gameDatabase = iManager.getGameDatabase();
-        iManager.printLine(player1.getUsername() + " fordert " + player2.getUsername() + " zu einem Duell heraus, möge das Spiel beginnen!");
+        this.gameDatabase = InstanceManager.getGameDatabase();
+        InstanceManager.printLine(player1.getUsername() + " fordert " + player2.getUsername() + " zu einem Duell heraus, möge das Spiel beginnen!");
         gameMemberList.put(player1.getUsername(), player1);
         gameMemberList.put(player2.getUsername(), player2);
         gameDatabase.setIngame(1, player1.getUsername());
@@ -202,7 +200,7 @@ public class Game {
             PlayerManager gameMember = entry.getValue();
             gameDatabase.setIngame(0, gameMember.getUsername());
             gameMember.setGame(null);
-            iManager.getServerManager().getClientManager(gameMember.getUsername()).setState(1);
+            InstanceManager.getServerManager().getClientManager(gameMember.getUsername()).setState(1);
         }
         player1.reloadClientGUI();//Lädt bei allen die LobbyListe neu
     }
@@ -225,7 +223,7 @@ public class Game {
             String[] command = {"quitgame", pUsernameOfQuitterPlayer};
             gameMember.sendObject(command);//Auch der Abbrecher braucht Quitgame, da er erst dann seine Lobby angezeigt bekommt
             gameMember.setGame(null);
-            iManager.getServerManager().getClientManager(gameMember.getUsername()).setState(1);
+            InstanceManager.getServerManager().getClientManager(gameMember.getUsername()).setState(1);
         }
         player1.reloadClientGUI();//Lädt bei allen die LobbyListe neu
     }
@@ -239,7 +237,7 @@ public class Game {
             String[] command = {"quitgamenotreacted", pUsernameOfLazyPlayer};
             gameMember.sendObject(command);//Auch der Abbrecher braucht Quitgame, da er erst dann seine Lobby angezeigt bekommt
             gameMember.setGame(null);
-            iManager.getServerManager().getClientManager(gameMember.getUsername()).setState(1);
+            InstanceManager.getServerManager().getClientManager(gameMember.getUsername()).setState(1);
         }
         player1.reloadClientGUI();//Lädt bei allen die LobbyListe neu
     }

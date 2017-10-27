@@ -21,11 +21,10 @@ import java.net.InetAddress;
  */
 public class ClientManager implements Callable<Void> {
 
-    private final InstanceManager iManager;
     private String username;
     private String email;
     private String language;
-    private Socket socket;
+    private final Socket socket;
     private String verificationCode;
     private String[] registerParameters;
     private ExecutorService threadpool;
@@ -35,11 +34,10 @@ public class ClientManager implements Callable<Void> {
     private PlayerManager player;
     private int state = 0;//0 = Launcher, 1 = Lobby, 2 = Game
 
-    public ClientManager(InstanceManager pIManager, Socket pSocket) {
-        iManager = pIManager;
+    public ClientManager(Socket pSocket) {
         socket = pSocket;
         threadpool = Executors.newFixedThreadPool(10);//Max. gleichzeitug zu erledigende Aufgaben, um DDoS vorzubeugen
-        player = new PlayerManager(iManager, this);
+        player = new PlayerManager(this);
     }
 
     /**
@@ -49,8 +47,8 @@ public class ClientManager implements Callable<Void> {
      */
     @Override
     public Void call() {
-        iManager.printLine("Client verbunden (IP: " + socket.getInetAddress() + " )");
-        threadpool.submit(new InputListener(iManager, this));
+        InstanceManager.printLine("Client verbunden (IP: " + socket.getInetAddress() + " )");
+        threadpool.submit(new InputListener(this));
         connectionListener = new ConnectionListener(this);
         threadpool.submit(connectionListener);
         return null;
@@ -62,7 +60,7 @@ public class ClientManager implements Callable<Void> {
      * @param message Die einkommende Nachricht
      */
     public void receiveStringArray(String[] message) {
-        new Command(iManager, message, this);
+        Command command = new Command(message, this);
     }
 
     /**
@@ -86,12 +84,12 @@ public class ClientManager implements Callable<Void> {
             raus.flush();
         } catch (Exception e) {
             if (e.toString().contains("Socket is closed")) {
-                iManager.printError("Kann Objekt nicht senden, trenne Verbindung");
+                InstanceManager.printError("Kann Objekt nicht senden, trenne Verbindung");
                 this.disconnect(false);
             } else if (e.toString().contains("socket write error")) {
 
             } else {
-                iManager.printError("Object(" + object.toString() + ") nicht gesendet werden: " + e);
+                InstanceManager.printError("Object(" + object.toString() + ") nicht gesendet werden: " + e);
             }
         }
     }
@@ -103,19 +101,18 @@ public class ClientManager implements Callable<Void> {
      */
     public void disconnect(boolean crash) {
         connectionListener.stop();
-        iManager.getCoreDatabase().setOnline(false, username);
-        iManager.getServerManager().removeFromClientManagerList(this);
+        InstanceManager.getCoreDatabase().setOnline(false, username);
+        InstanceManager.getServerManager().removeFromClientManagerList(this);
         player.receiveDisconnect(crash);
         if (socket != null) {
             try {
                 socket.close();
-                iManager.printLine("Client hast sich abgemeldet: " + username + " (" + socket.getInetAddress() + ")");
+                InstanceManager.printLine("Client hast sich abgemeldet: " + username + " (" + socket.getInetAddress() + ")");
             } catch (IOException e) {
-                iManager.printError("Client konnte sich nicht abmelden: " + e);
+                InstanceManager.printError("Client konnte sich nicht abmelden: " + e);
             }
         }
         //Folgendes dient zur Sicherheit, um einem MemoryLeak vorzubeugen
-        socket = null;
         connectionListener = null;
         player = null;
         threadpool.shutdownNow();
@@ -184,7 +181,7 @@ public class ClientManager implements Callable<Void> {
      */
     public void setUsername(String pUsername) {
         this.username = pUsername;
-        ServerManager server = iManager.getServerManager();
+        ServerManager server = InstanceManager.getServerManager();
         server.addUsernameToMap(this);
         server.reloadGUI();
     }

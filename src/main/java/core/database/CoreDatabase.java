@@ -23,9 +23,7 @@ public class CoreDatabase {
     private final NitriteCollection col;
 
     public CoreDatabase() {
-        db = Nitrite.builder()
-                .filePath(System.getProperty("user.dir") + "\\TicTacToe.db")
-                .openOrCreate();
+        db = InstanceManager.getDB();
         col = db.getCollection("users");
     }
 
@@ -34,9 +32,10 @@ public class CoreDatabase {
      *
      * @param username Der Benutzername des Benutzeres
      * @param password Und sein Passwort
-     * @return Gibt zurück, ob der Login erfolgreich war
+     * @return Gibt zurück, ob der Login erfolgreich war 0 falsches pw oder
+     * nicht existent, 1 richtiges pw, 2 SQL-Injection versuch
      */
-    public int login(String username, String password) {//0 falsches pw, 1 richtiges pw, 2 SQL-Injection versuch
+    public int login(String username, String password) {
         if (password.length() != 128 || password.contains("*") || password.contains("'") || password.contains("%") || password.contains(".")) {
             return 2;
         }
@@ -44,7 +43,11 @@ public class CoreDatabase {
 
         Cursor cursor = col.find(eq("username", username));
         if (cursor.size() != 1) {
-            InstanceManager.printError("More than one user named " + username);
+            if (cursor.size() < 1) {
+                InstanceManager.printError("No user named \"" + username + "\"");
+            } else {
+                InstanceManager.printError("More than one user named \"" + username + "\"");
+            }
             return 0;
         } else {
             if (cursor.firstOrDefault().get("password").equals(hashedPassword)) {
@@ -72,7 +75,9 @@ public class CoreDatabase {
                 .put("name", name)
                 .put("password", hashedPassword)
                 .put("mail", mail)
-                .put("language", language);
+                .put("language", language)
+                .put("mailconfirmed", false)
+                .put("online", false);
 
         col.insert(user);
     }
@@ -86,9 +91,22 @@ public class CoreDatabase {
      * @return Der Boolean-Wert, ob er schon registriert ist, oder nicht
      */
     public boolean isAccountAlreadyAssigned(String username, String email) {
-        Cursor usernames = col.find(eq("username", username));
-        Cursor emails = col.find(eq("mail", email));
-        return (usernames.hasMore() || emails.hasMore());
+        if (username == null && email == null) {
+            return true;
+        }
+        if (username != null) {
+            Cursor usernames = col.find(eq("username", username));
+            if (usernames.size() > 0) {
+                return true;
+            }
+        }
+        if (email != null) {
+            Cursor emails = col.find(eq("mail", email));
+            if (emails.size() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -173,5 +191,9 @@ public class CoreDatabase {
      */
     public void resetOnlineStatusOfPlayers() {
         col.update(null, createDocument("online", false));
+    }
+
+    public void deletePlayer(String username) {
+        col.remove(eq("username", username));
     }
 }

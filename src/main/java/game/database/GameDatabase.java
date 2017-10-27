@@ -5,15 +5,8 @@
  */
 package game.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import core.networking.ServerManager;
 import general.InstanceManager;
-import java.sql.PreparedStatement;
-import java.util.Map;
+import java.util.HashMap;
 import org.dizitart.no2.Cursor;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.Nitrite;
@@ -34,31 +27,8 @@ public class GameDatabase {
     private final NitriteCollection col;
 
     public GameDatabase() {
-        db = Nitrite.builder()
-                .filePath(System.getProperty("user.dir") + "\\TicTacToe.db")
-                .openOrCreate();
+        db = InstanceManager.getDB();
         col = db.getCollection("players");
-
-        try {
-            con = DriverManager.getConnection(host, username, password);
-            iManager.printLine("Spieler-Datenbank verbunden");
-            lastIndexStatement = con.prepareStatement("select max(id) from SHARKNOON.SPIELER");
-            registerStatement = con.prepareStatement("insert into SHARKNOON.SPIELER (id, username) values (?,?)");
-            setOnlineStatement = con.prepareStatement("UPDATE SHARKNOON.SPIELER SET online = ? WHERE username = ?");
-            setAllOnlineStatement = con.prepareStatement("UPDATE SHARKNOON.SPIELER SET online = ?");
-            setIngameStatement = con.prepareStatement("UPDATE SHARKNOON.SPIELER SET ingame = ? WHERE username = ?");
-            setAllIngameStatement = con.prepareStatement("UPDATE SHARKNOON.SPIELER SET ingame = ?");
-            setWinsStatement = con.prepareStatement("UPDATE SHARKNOON.SPIELER SET wins = ? where username = ?");
-            setDefeatsStatement = con.prepareStatement("UPDATE SHARKNOON.SPIELER SET defeats = ? where username = ?");
-            setDrawsStatement = con.prepareStatement("UPDATE SHARKNOON.SPIELER SET draws = ? where username = ?");
-            getWinLostRationStatement = con.prepareStatement("select wins, defeats, draws from SHARKNOON.SPIELER where username = ?");
-            getOnlineUsersAndStateStatement = con.prepareStatement("select username, ingame from SHARKNOON.SPIELER where online=true");
-            getOnlineUsersAnsScoreStatement = con.prepareStatement("select username, wins, defeats, draws from SHARKNOON.SPIELER where online=true");
-        } catch (SQLException err) {
-            this.iManager.printError("Konnte keine Spieler-DB-Verbindung herstellen: " + err.getMessage());
-            this.iManager.printError("Beende Server, da er ohne Spieler-Datenbank nutzlos ist, bitte Spieler-Datenbank VORHER starten.");
-            System.exit(0);
-        }
     }
 
     /**
@@ -67,7 +37,11 @@ public class GameDatabase {
      * @param pUsername Der Benutzername des aufzunehmenden Spielers
      */
     public void add(String pUsername) {
-        col.insert(Document.createDocument("username", pUsername));
+        Document user = Document.createDocument("username", pUsername)
+                .put("wins", 0)
+                .put("defeats", 0)
+                .put("draws", 0);
+        col.insert(user);
     }
 
     public void setIngame(Integer value, String pUsername) {
@@ -137,13 +111,9 @@ public class GameDatabase {
      */
     public HashMap<String, Integer> getOnlineUsersAndState() {
         HashMap<String, Integer> onlineUsersAndTheirState = new HashMap<>();
-        try {
-            ResultSet ergebnis = getOnlineUsersAndStateStatement.executeQuery();
-            while (ergebnis.next()) {
-                onlineUsersAndTheirState.put(ergebnis.getString(1), ergebnis.getInt(2));
-            }
-        } catch (Exception e) {
-            iManager.printError("Konnte die Online Users mit derem Status nicht aus der Gamedatenbank holen: " + e);
+        Cursor c = col.find(eq("online", true));
+        for (Document u : c) {
+            onlineUsersAndTheirState.put(u.get("username", String.class), u.get("ingame", Integer.class));
         }
         onlineUsersAndTheirState.put("online users", 0);
         return onlineUsersAndTheirState;
@@ -158,12 +128,12 @@ public class GameDatabase {
     public HashMap<String, int[]> getOnlineUsersAndScore() {
         HashMap<String, int[]> onlineUsersAndScore = new HashMap<>();
         Cursor users = col.find(eq("online", true));
-        for (Document user : users) {
+        for (Document u : users) {
             int[] scores = new int[3];//wins, defeats, draws
-            scores[0] = user.get("wins", Integer.class);
-            scores[1] = user.get("defeats", Integer.class);
-            scores[2] = user.get("draws", Integer.class);
-            onlineUsersAndScore.put(user.get("username", String.class), scores);
+            scores[0] = u.get("wins", Integer.class);
+            scores[1] = u.get("defeats", Integer.class);
+            scores[2] = u.get("draws", Integer.class);
+            onlineUsersAndScore.put(u.get("username", String.class), scores);
         }
         onlineUsersAndScore.put("users score", null);
         return onlineUsersAndScore;

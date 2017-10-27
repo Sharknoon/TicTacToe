@@ -17,18 +17,15 @@ import java.util.concurrent.Callable;
  */
 public final class InputListener implements Callable<Void> {
 
-    InstanceManager iManager;
     ClientManager client;
     Socket socket;
 
     /**
      * Wiederholt unendlich oft die Methode receiveString()
      *
-     * @param pIManager
      * @param pClient
      */
-    public InputListener(InstanceManager pIManager, ClientManager pClient) {
-        this.iManager = pIManager;
+    public InputListener(ClientManager pClient) {
         this.client = pClient;
         this.socket = client.getSocket();
     }
@@ -47,16 +44,16 @@ public final class InputListener implements Callable<Void> {
                     client.receiveObject(object);
                 }
             } catch (ClassNotFoundException ex) {
-                iManager.printError("Konnte einkommende Nachricht nicht lesen: " + ex);
+                InstanceManager.printError("Konnte einkommende Nachricht nicht lesen: " + ex);
             } catch (IOException exe) {
                 if (exe.toString().equals("java.net.SocketException: Connection reset") || exe.toString().equals("java.net.SocketException: Socket closed")) {
-                    iManager.printLine("Client hat die Verbindung verloren: " + exe + ", beende daher die Verbindungen zum Clienten");
+                    InstanceManager.printLine("Client hat die Verbindung verloren: " + exe + ", beende daher die Verbindungen zum Clienten");
                     client.disconnect(true);
                     return null;
                 }
                 if (exe.toString().equals("java.io.EOFException")) {
-                    iManager.printError("EndOfFile-Fehler beim Empfangen einer Nachricht: " + exe);
-                    iManager.printError("TODO");
+                    InstanceManager.printError("EndOfFile-Fehler beim Empfangen einer Nachricht: " + exe);
+                    InstanceManager.printError("TODO");
                     //System.exit(0);
                     return null;
                 }
@@ -64,7 +61,7 @@ public final class InputListener implements Callable<Void> {
                     client.sendObject("invalidcommand");
                     client.disconnect(true);
                 }
-                iManager.printError("Konnte einkommende Nachricht nicht lesen: " + exe);
+                InstanceManager.printError("Konnte einkommende Nachricht nicht lesen: " + exe);
             }
         }
         return null;

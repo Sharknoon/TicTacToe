@@ -34,7 +34,6 @@ public class GUI extends Application {
 
     private ExecutorService threadPool;
     private Stage primaryStage;
-    private InstanceManager iManager;
 
     public GUI() {
 
@@ -44,12 +43,11 @@ public class GUI extends Application {
     public void start(Stage pPrimaryStage) throws Exception {
         //Generelle Parameter beladen
         primaryStage = pPrimaryStage;
-        iManager = new InstanceManager();
-        iManager.addInstance(this);
+        InstanceManager.addInstance(this);
         this.threadPool = Executors.newCachedThreadPool();
         FXMLLoader loader = new FXMLLoader();
         Parent root = (Parent) loader.load(getClass().getResourceAsStream("/GUI.fxml"));
-        iManager.addInstance((GUIController) loader.getController());
+        InstanceManager.addInstance((GUIController) loader.getController());
         Scene scene = new Scene(root);
         primaryStage.setTitle("Server");
         primaryStage.setScene(scene);
@@ -65,7 +63,7 @@ public class GUI extends Application {
      */
     public void addToTextFlow(String pMessage, Color pColor) {
         Platform.runLater(() -> {
-            iManager.getGUIController().addToTextFlow(pMessage + "\n", pColor);
+            InstanceManager.getGUIController().addToTextFlow(pMessage + "\n", pColor);
         });
     }
 
@@ -75,7 +73,7 @@ public class GUI extends Application {
      */
     public void setListView() {
         Platform.runLater(() -> {
-            iManager.getGUIController().setListView(false);
+            InstanceManager.getGUIController().setListView(false);
         });
     }
 
@@ -102,11 +100,10 @@ public class GUI extends Application {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 String[] loginData = {emailField.getText(), passwordField.getText()};//DBPassword, Emailadress, EmailPW
-                threadPool.submit(new ServerManager(iManager, loginData));
-                iManager.getGUIController().setInstanceManager(iManager);
-                iManager.getGUIController().setListView(true);
+                threadPool.submit(new ServerManager(loginData));
+                InstanceManager.getGUIController().setListView(true);
                 primaryStage.setOnCloseRequest((WindowEvent we) -> {
-                    iManager.getServerManager().disconnect();
+                    InstanceManager.getServerManager().disconnect();
                 });
             } else {
                 System.exit(0);

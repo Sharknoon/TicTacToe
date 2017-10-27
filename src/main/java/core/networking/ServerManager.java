@@ -16,6 +16,7 @@ import game.database.GameDatabase;
 import general.InstanceManager;
 import java.util.HashMap;
 import javax.net.ServerSocketFactory;
+import org.dizitart.no2.Nitrite;
 
 /**
  *
@@ -23,26 +24,23 @@ import javax.net.ServerSocketFactory;
  */
 public class ServerManager implements Runnable {
 
-    private final InstanceManager iManager;
     private ServerSocketFactory socketFactory;
     private ServerSocket server = null;
     private ExecutorService threadPool;
+    private Nitrite db;
     private CoreDatabase coreDatabase;
     private GameDatabase gameDatabase;
     private ObjectOutputStream raus;
     private final HashMap<String, ClientManager> clientManagerMap = new HashMap<>();//Nur die eingeloggten Clienten (Geht somit schneller zum getUsername)
-   
 
     /**
      * Hier wird der Server gestartet und der Threadpool initialisiert.
      *
-     * @param iManager
      * @param loginData
      */
-    public ServerManager(InstanceManager iManager, String[] loginData) {
-        this.iManager = iManager;
-        iManager.addInstance(this);
-        iManager.addInstance(new Email(loginData[0], loginData[1]));
+    public ServerManager(String[] loginData) {
+        InstanceManager.addInstance(this);
+        InstanceManager.addInstance(new Email(loginData[0], loginData[1]));
     }
 
     /**
@@ -60,15 +58,15 @@ public class ServerManager implements Runnable {
                 if (socket == null) {
                     break;
                 }
-                ClientManager client = new ClientManager(iManager, socket);
+                ClientManager client = new ClientManager(socket);
                 threadPool.submit(client);
 
                 this.clientManagerMap.put(String.valueOf(socket.hashCode()), client);
 //                this.clientManagerList.add(client);
-                iManager.getGUI().setListView();
+                InstanceManager.getGUI().setListView();
             } catch (IOException e) {
                 if (e.toString().contains("Socket is closed")) {
-                    iManager.printLine("Socket geschlossen...");
+                    InstanceManager.printLine("Socket geschlossen...");
                     loop = false;
                 }
             }
@@ -87,7 +85,7 @@ public class ServerManager implements Runnable {
                 server.close();
                 System.exit(0);
             } catch (IOException e) {
-                iManager.printError("Socket konnte nicht geschlossen werden: " + e.getMessage());
+                InstanceManager.printError("Socket konnte nicht geschlossen werden: " + e.getMessage());
             }
         }
     }
@@ -104,7 +102,7 @@ public class ServerManager implements Runnable {
                 raus.writeObject(object);
                 raus.flush();
             } catch (IOException ex) {
-                iManager.printError("Nachricht konnte nicht an alle verteilt werden: " + ex + "  " + object);
+                InstanceManager.printError("Nachricht konnte nicht an alle verteilt werden: " + ex + "  " + object);
             }
         });
     }
@@ -139,7 +137,7 @@ public class ServerManager implements Runnable {
     public void removeFromClientManagerList(ClientManager client) {
         clientManagerMap.remove(client.getUsername());
         clientManagerMap.remove(String.valueOf(client.getSocket().hashCode()));//Falls er nich nciht eingelogggt war
-        iManager.getGUI().setListView();
+        InstanceManager.getGUI().setListView();
     }
 
     /**
@@ -160,7 +158,7 @@ public class ServerManager implements Runnable {
      * Lädt die Oberfläche neu, z.B. nach einer Abmeldung eines Clienten
      */
     public void reloadGUI() {
-        iManager.getGUI().setListView();
+        InstanceManager.getGUI().setListView();
     }
 
     @Override
@@ -168,21 +166,25 @@ public class ServerManager implements Runnable {
         try {
             server = new ServerSocket(3141);
         } catch (java.net.BindException e) {
-            iManager.printError("Adresse schon vergeben, läuft schon ein Server?: " + e.getMessage());
-            iManager.printError("Server wird beendet, um doppelte Server sofort zu unterbinden!");
+            InstanceManager.printError("Adresse schon vergeben, läuft schon ein Server?: " + e.getMessage());
+            InstanceManager.printError("Server wird beendet, um doppelte Server sofort zu unterbinden!");
             System.exit(0);
         } catch (IOException ex) {
-            iManager.printError("Server konnte nicht gestartet werden: " + ex.getMessage());
+            InstanceManager.printError("Server konnte nicht gestartet werden: " + ex.getMessage());
         }
 
         this.threadPool = Executors.newCachedThreadPool();//Es können nur 100 Clienten sich maximal gleichzeitig verbinden, doch nicht, von FixedThreadPool zu CachedThredPool gewechselt wegen Performance
+        db = Nitrite.builder()
+                .filePath(System.getProperty("user.dir") + "\\TicTacToe.db")
+                .openOrCreate();
+        InstanceManager.addInstance(db);
         coreDatabase = new CoreDatabase();
         coreDatabase.resetOnlineStatusOfPlayers();
-        iManager.addInstance(coreDatabase);
+        InstanceManager.addInstance(coreDatabase);
         gameDatabase = new GameDatabase();
         gameDatabase.resetOnlineStatusOfPlayers();
-        iManager.addInstance(gameDatabase);
-        iManager.printLine("Server erreichbar unter " + server.getInetAddress() + ":" + server.getLocalPort());
+        InstanceManager.addInstance(gameDatabase);
+        InstanceManager.printLine("Server erreichbar unter " + server.getInetAddress() + ":" + server.getLocalPort());
         this.connect();
     }
 

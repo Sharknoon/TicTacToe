@@ -14,7 +14,6 @@ import game.database.GameDatabase;
 import general.InstanceManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
@@ -23,16 +22,14 @@ import javafx.util.Duration;
  */
 public class PlayerManager {//Pro Client ein Object des GameMangers
 
-    private InstanceManager iManager;
     private Game game;
-    private ClientManager client;
+    private final ClientManager client;
     private boolean incomingRequestPending;
     private boolean outgoingRequestPending = false;
     private Timeline timerRequest;
     private Timeline timerTurn;
 
-    public PlayerManager(InstanceManager pIManager, ClientManager pClient) {
-        iManager = pIManager;
+    public PlayerManager(ClientManager pClient) {
         client = pClient;
     }
 
@@ -42,7 +39,7 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
      * @param client Der zu hinzufügende Benutzer
      */
     public void receiveNewUser(ClientManager client) {
-        iManager.getGameDatabase().add(client.getUsername());
+        InstanceManager.getGameDatabase().add(client.getUsername());
     }
 
     /**
@@ -50,9 +47,9 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
      *
      */
     public void receiveConnect() {
-        iManager.getGameDatabase().setOnline(true, client.getUsername());
+        InstanceManager.getGameDatabase().setOnline(true, client.getUsername());
         String[] command = {Constants.USERJOINED, client.getUsername()};
-        iManager.getServerManager().sendToEveryone(command);
+        InstanceManager.getServerManager().sendToEveryone(command);
         reloadClientGUI();
     }
 
@@ -63,8 +60,8 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
      * wurde
      */
     public void receiveDisconnect(boolean crash) {
-        GameDatabase gameDatabase = iManager.getGameDatabase();
-        ServerManager server = iManager.getServerManager();
+        GameDatabase gameDatabase = InstanceManager.getGameDatabase();
+        ServerManager server = InstanceManager.getServerManager();
         gameDatabase.setOnline(false, client.getUsername());
         gameDatabase.setIngame(0, client.getUsername());
         if (crash) {
@@ -101,14 +98,14 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
      */
     public void receiveCommand(String[] parameters) {
         //Alle Befehle ausser disconnect, register und login kommen hier vom Clienten an, der Chat wurde ebenfalls schon herausgefiltert (siehe receiveStringForChat)
-        GameDatabase gameDatabase = iManager.getGameDatabase();
-        ServerManager server = iManager.getServerManager();
+        GameDatabase gameDatabase = InstanceManager.getGameDatabase();
+        ServerManager server = InstanceManager.getServerManager();
         int state = client.getState();
         switch (parameters[0]) {
             case Constants.LOBBYCHATFROMCLIENT:
                 if (state == 1) {
                     String lobbychatmessage = parameters[1];
-                    iManager.printLine(client.getUsername() + ": " + lobbychatmessage);
+                    InstanceManager.printLine(client.getUsername() + ": " + lobbychatmessage);
                     String[] command = {"lobbychat", client.getUsername(), lobbychatmessage};
                     server.sendToEveryone(command);
                 } else {
@@ -141,13 +138,13 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
                 if (state == 1) {
                     timerRequest.stop();
                     //neues game erstellen
-                    iManager.printLine(client.getUsername() + " hat die Spielanfrage von " + parameters[1] + " angenommen.");
+                    InstanceManager.printLine(client.getUsername() + " hat die Spielanfrage von " + parameters[1] + " angenommen.");
                     incomingRequestPending = false;
                     PlayerManager herausforderer = server.getClientManager(parameters[1]).getPlayerManager();
                     herausforderer.setOutgoingRequestPending(false);
                     server.getClientManager(parameters[1]).setState(2);
                     client.setState(2);
-                    game = new Game(iManager, herausforderer, this);
+                    game = new Game(herausforderer, this);
                     herausforderer.setGame(game);
                 } else {
                     String[] command = {"msg", "Not allowed in the current context"};
@@ -185,12 +182,12 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
             case Constants.GAMECHAT:
                 if (state == 2) {
                     String gamechatmessage = parameters[1];
-                    iManager.printLine(client.getUsername() + ": " + gamechatmessage);
+                    InstanceManager.printLine(client.getUsername() + ": " + gamechatmessage);
                     if (game != null) {
                         String[] command5 = {Constants.GAMECHAT, client.getUsername(), gamechatmessage};
                         game.sendToEveryGameMember(command5);
                     } else {
-                        iManager.printError("Es kam eine Gamenachricht an, obwohl " + client.getUsername() + " in keinem Spiel mehr ist, Nachricht wird verschluckt ☺");
+                        InstanceManager.printError("Es kam eine Gamenachricht an, obwohl " + client.getUsername() + " in keinem Spiel mehr ist, Nachricht wird verschluckt ☺");
                     }
                 } else {
                     String[] command = {"msg", "Not allowed in the current context"};
@@ -248,7 +245,7 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
                         client.setState(1);
                         game.cancelGame(true, client.getUsername());
                     } else {
-                        iManager.printError("Sollte eigentlich durch ein cancelGame abgefangen sein!!, reconnect nach Verbindungsverlust??!?");
+                        InstanceManager.printError("Sollte eigentlich durch ein cancelGame abgefangen sein!!, reconnect nach Verbindungsverlust??!?");
                     }
                 } else {
                     String[] command = {"msg", "Not allowed in the current context"};
@@ -264,7 +261,7 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
                 }
                 break;
             default:
-                iManager.printError("Konnte Befehl nicht verarbeiten: " + parameters[0]);
+                InstanceManager.printError("Konnte Befehl nicht verarbeiten: " + parameters[0]);
                 break;
         }
     }
@@ -294,7 +291,7 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
      * @param requester Der Anfrager
      */
     public void setAndStartRequestTimer(String requester) {
-        ServerManager server = iManager.getServerManager();
+        ServerManager server = InstanceManager.getServerManager();
         timerRequest = new Timeline(new KeyFrame(
                 Duration.millis(10000),
                 event -> {//Ich habe nicht reagiert
@@ -314,7 +311,7 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
                     if (game != null) {
                         game.notReacted(client.getUsername());
                     } else {
-                        iManager.printError("Irgendwo wurde vergessen, den Timer für " + getUsername() + " zu stoppen! Servercodeerror!");
+                        InstanceManager.printError("Irgendwo wurde vergessen, den Timer für " + getUsername() + " zu stoppen! Servercodeerror!");
                     }
                 }));
         timerTurn.play();
@@ -366,8 +363,8 @@ public class PlayerManager {//Pro Client ein Object des GameMangers
      * Lädt bei allen Clienten die Onlineliste und die Scoreliste neu
      */
     public void reloadClientGUI() {//Für die Lobby
-        ServerManager server = iManager.getServerManager();
-        GameDatabase gameDatabase = iManager.getGameDatabase();
+        ServerManager server = InstanceManager.getServerManager();
+        GameDatabase gameDatabase = InstanceManager.getGameDatabase();
         server.sendToEveryone(gameDatabase.getOnlineUsersAndState());//Lädt bei allen Clienten die OnlineListe neu
         server.sendToEveryone(gameDatabase.getOnlineUsersAndScore());
     }

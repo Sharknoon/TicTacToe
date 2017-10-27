@@ -12,6 +12,7 @@ import core.networking.Email;
 import core.networking.ServerManager;
 import game.database.GameDatabase;
 import javafx.scene.paint.Color;
+import org.dizitart.no2.Nitrite;
 
 /**
  *
@@ -25,6 +26,7 @@ public class InstanceManager {
     static Email email;
     static GUI gui;
     static GUIController guiController;
+    static Nitrite db;
 
     public InstanceManager() {
 
@@ -43,6 +45,8 @@ public class InstanceManager {
             gui = (GUI) object;
         } else if (object instanceof GUIController) {
             guiController = (GUIController) object;
+        } else if (object instanceof Nitrite) {
+            db = (Nitrite) object;
         }
     }
 
@@ -70,6 +74,10 @@ public class InstanceManager {
         return guiController;
     }
 
+    public static Nitrite getDB() {
+        return db;
+    }
+
     /**
      * Gibt eine Nachricht auf der GUI und in der Console aus
      *
@@ -78,7 +86,9 @@ public class InstanceManager {
     public static void printLine(String message) {
         java.util.Date date = new java.util.Date();
         System.out.println("[" + date.toString() + "] {Core} (ServerManager): " + message);
-        gui.addToTextFlow("[" + date.toString() + "] {Core} (ServerManager): " + message, Color.BLACK);
+        if (gui != null) {
+            gui.addToTextFlow("[" + date.toString() + "] {Core} (ServerManager): " + message, Color.BLACK);
+        }
     }
 
     /**
@@ -89,7 +99,9 @@ public class InstanceManager {
     public static void printError(String errorMessage) {
         java.util.Date date = new java.util.Date();
         System.err.println("[" + date.toString() + "] {Core} (ServerManager): " + errorMessage);
-        gui.addToTextFlow("[" + date.toString() + "] {Core} (ServerManager): " + errorMessage, Color.RED);
+        if (gui != null) {
+            gui.addToTextFlow("[" + date.toString() + "] {Core} (ServerManager): " + errorMessage, Color.RED);
+        }
     }
 
 }

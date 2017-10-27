@@ -48,21 +48,18 @@ public class GUIController implements Initializable {
     private VBox list = new VBox();
     @FXML
     private ScrollPane scrollPane;
-    private InstanceManager iManager;
-    private HashMap<ClientManager, CheckBox> checkboxMap = new HashMap<>();
+    private final HashMap<ClientManager, CheckBox> checkboxMap = new HashMap<>();
     private Boolean everybodySelected = false;
-    private HashMap<Integer, String> commandHistory = new HashMap<>();
+    private final HashMap<Integer, String> commandHistory = new HashMap<>();
     private int selectedHistory = 0;
     
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    }
-
-    public void setInstanceManager(InstanceManager pIManager){
-        this.iManager = pIManager;
     }
     
     /**
@@ -74,52 +71,53 @@ public class GUIController implements Initializable {
      */
     public void tasteGedrueckt(Event evt) {
         KeyEvent event = (KeyEvent) evt;
-        if (event.getCode().equals(KeyCode.ENTER)) {
-            commandHistory.put(commandHistory.size() + 1, input.getText());
-            selectedHistory = commandHistory.size();
-            boolean atLeastOneSelected = false;
-            if (everybodySelected) {
-                String eingabe2 = input.getText();
-                String[] command = eingabe2.split(" ");
-                iManager.getServerManager().sendToEveryone(command);
-                atLeastOneSelected = true;
-            } else {
-                for (Map.Entry<ClientManager, CheckBox> entry : checkboxMap.entrySet()) {
-                    ClientManager client = entry.getKey();
-                    CheckBox checkbox = entry.getValue();
-                    if ((!checkbox.isDisabled()) && checkbox.isSelected()) {
-                        String eingabe2 = input.getText();
-                        String[] command = eingabe2.split(" ");
-                        client.sendObject(command);
-                        atLeastOneSelected = true;
-                    }
-                }
-            }
-            input.positionCaret(0);
-            input.clear();
-            if (atLeastOneSelected == false) {
-                this.showMessage("Kein Benutzer ausgewählt!");
-                return;
-            }
-        } else if (event.getCode().equals(KeyCode.UP)) {
-            if (selectedHistory > 0) {
-                selectedHistory--;
-                input.setText(commandHistory.get(selectedHistory + 1));
-            }
-            input.positionCaret(input.getText().length());
-        } else if (event.getCode().equals(KeyCode.DOWN)) {
-            if (selectedHistory < commandHistory.size()) {
-                selectedHistory++;
-                input.setText(commandHistory.get(selectedHistory + 1));
-                if (input.getText() == null) {
-                    input.positionCaret(0);
+        switch (event.getCode()) {
+            case ENTER:
+                commandHistory.put(commandHistory.size() + 1, input.getText());
+                selectedHistory = commandHistory.size();
+                boolean atLeastOneSelected = false;
+                if (everybodySelected) {
+                    String eingabe2 = input.getText();
+                    String[] command = eingabe2.split(" ");
+                    InstanceManager.getServerManager().sendToEveryone(command);
+                    atLeastOneSelected = true;
                 } else {
-                    input.positionCaret(input.getText().length());
-                }
-            } else if (selectedHistory == commandHistory.size()) {
-                input.positionCaret(0);
+                    for (Map.Entry<ClientManager, CheckBox> entry : checkboxMap.entrySet()) {
+                        ClientManager client = entry.getKey();
+                        CheckBox checkbox = entry.getValue();
+                        if ((!checkbox.isDisabled()) && checkbox.isSelected()) {
+                            String eingabe2 = input.getText();
+                            String[] command = eingabe2.split(" ");
+                            client.sendObject(command);
+                            atLeastOneSelected = true;
+                        }
+                    }
+                }   input.positionCaret(0);
                 input.clear();
-            }
+                if (atLeastOneSelected == false) {
+                    this.showMessage("Kein Benutzer ausgewählt!");
+                }   break;
+            case UP:
+                if (selectedHistory > 0) {
+                    selectedHistory--;
+                    input.setText(commandHistory.get(selectedHistory + 1));
+                }   input.positionCaret(input.getText().length());
+                break;
+            case DOWN:
+                if (selectedHistory < commandHistory.size()) {
+                    selectedHistory++;
+                    input.setText(commandHistory.get(selectedHistory + 1));
+                    if (input.getText() == null) {
+                        input.positionCaret(0);
+                    } else {
+                        input.positionCaret(input.getText().length());
+                    }
+                } else if (selectedHistory == commandHistory.size()) {
+                    input.positionCaret(0);
+                    input.clear();
+                }   break;
+            default:
+                break;
         }
     }
 
@@ -190,8 +188,8 @@ public class GUIController implements Initializable {
         }
         pane.setRight(checkBoxEveryone);
         list.getChildren().add(pane);
-        if (iManager.getServerManager().getClientManagerMap() != null) {
-            HashMap<String, ClientManager> map = iManager.getServerManager().getClientManagerMap();
+        if (InstanceManager.getServerManager().getClientManagerMap() != null) {
+            HashMap<String, ClientManager> map = InstanceManager.getServerManager().getClientManagerMap();
             for (Map.Entry<String, ClientManager> entry : map.entrySet()) {
                 ClientManager clientManager = entry.getValue();
                 String username;
