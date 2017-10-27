@@ -146,7 +146,7 @@ public class LauncherOberflaeche extends Application implements Oberflaeche {
     public void zeigeFehlerAn(String pFehler) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.getDialogPane().setBackground(new Background(new BackgroundImage(new Image("header.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+            //alert.getDialogPane().setBackground(new Background(new BackgroundImage(new Image("header.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
             alert.setTitle(languages.getString(43));
             alert.setHeaderText(languages.getString(44));
             alert.setContentText(pFehler);
