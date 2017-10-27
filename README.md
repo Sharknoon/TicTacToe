@@ -1,4 +1,4 @@
-![Alt text](https://raw.githubusercontent.com/Sharknoon/TicTacToe/Branch1/TicTacToeClient/src/header.png?raw=true "TicTacToe")
+![Alt text](https://github.com/Sharknoon/TicTacToe/raw/master/TicTacToeClient/src/main/resources/header.png?raw=true "TicTacToe")
 
 Hello guys,
 this is my own litte game, Tic Tac Toe. Its very simple to play, but it has full online multiplayer ☺. There is a launcher, where you can create an account (even with confirmation emails so no more .kreps emails) or log you in.
