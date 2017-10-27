@@ -1,0 +1,64 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.root{
+    -fx-base: #0078cc;
+    -fx-background: white;
+    -fx-accent: transparent;
+    -fx-focus-color: transparent;
+    -fx-border-width: 0;
+}
+.text-flow{/*Chat*/
+    -fx-background-color: white;
+    -fx-border-width: 0;
+}
+
+.text-area {/*Überschrift*/
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-text-fill: black;
+    -fx-border-width: 0;
+    -fx-background-color: white;
+    -fx-focus-color: transparent;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+}
+
+.scroll-pane {
+    -fx-focus-color: transparent;
+    -fx-background: white;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color:transparent;
+}
+
+.label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff0000;
+}
+
+.text-input {/*TextField*/
+    -fx-control-inner-background:  #cbcbcb;
+    -fx-focus-color: transparent;
+    -fx-border-color: black;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+}
+
+.button { 
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #0078cc;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}

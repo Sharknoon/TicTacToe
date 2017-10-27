@@ -1,0 +1,55 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.root { /*gilt für alle*/
+    -fx-base: #0078cc;
+    -fx-background-color: white;
+}
+.label { /*Label*/
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-text-fill:  #0100ff;
+    /*    -fx-effect: dropshadow( gaussian , rgba(0,0,255,0.3) , 10,0.9,0,0 );*/
+}
+.text-input {/*TextField*/
+    -fx-control-inner-background:  #cbcbcb;
+    -fx-focus-color: transparent;
+    -fx-border-color: black;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+}
+
+.combobox {/*die Sprachen-Combobox*/
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #0078cc;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11pt;
+    -fx-text-fill: white;
+}
+
+.combo-box > .list-cell {
+    -fx-text-fill: white;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-background-color: #cbcbcb;
+    -fx-text-fill:black;
+}
+
+.combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background-color: #0078cc;
+    -fx-text-fill: white;
+}
+
+.button { 
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: #0078cc;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}

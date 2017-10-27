@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="800.0" prefWidth="1300.0" styleClass="mainFxmlClass" stylesheets="@CSSLauncher.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="guiLauncher.FXMLLauncherController">
+    <children>
+        <BorderPane layoutX="158.0" layoutY="80.0" prefHeight="800.0" prefWidth="1266.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <bottom>
+                <BorderPane prefHeight="35.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <left>
+                        <Label fx:id="fxLabelState" text="Label" BorderPane.alignment="BOTTOM_LEFT">
+                            <BorderPane.margin>
+                                <Insets bottom="5.0" left="5.0" />
+                            </BorderPane.margin>
+                            <font>
+                                <Font size="16.0" />
+                            </font>
+                        </Label>
+                    </left>
+                    <right>
+                        <ComboBox fx:id="fxComboBoxLanguage" onAction="#ComboBoxSelected" prefWidth="200.0" BorderPane.alignment="BOTTOM_RIGHT">
+                            <BorderPane.margin>
+                                <Insets bottom="5.0" right="5.0" />
+                            </BorderPane.margin>
+                        </ComboBox>
+                    </right>
+                </BorderPane>
+            </bottom>
+            <center>
+                <GridPane BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <BorderPane.margin>
+                        <Insets bottom="100.0" />
+                    </BorderPane.margin>
+                    <children>
+                        <GridPane maxHeight="250.0" maxWidth="350.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                    <right>
+                                        <TextField fx:id="fxTextFieldLoginUsername" onKeyReleased="#fxTextfieldLoginKeyPRESSED" styleClass="text-input" BorderPane.alignment="CENTER">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                 <effect>
+                                    <Glow />
+                                 </effect>
+                                        </TextField>
+                                    </right>
+                                    <left>
+                                        <Label fx:id="fxLabelLoginUsername" text="Username" BorderPane.alignment="CENTER">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                        </Label>
+                                    </left>
+                                </BorderPane>
+                                <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                    <right>
+                                        <PasswordField fx:id="fxPasswordFieldLoginPassword" onKeyReleased="#fxTextfieldLoginKeyPRESSED" styleClass="text-input" BorderPane.alignment="CENTER">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                        </PasswordField>
+                                    </right>
+                                    <left>
+                                        <Label fx:id="fxLabelLoginPassword" text="Password" BorderPane.alignment="CENTER">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                        </Label>
+                                    </left>
+                                </BorderPane>
+                                <Button fx:id="fxButtonLoginLogin" minWidth="150.0" mnemonicParsing="false" onAction="#fxButtonLoginPRESSED" text="Login" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                    <font>
+                                        <Font size="18.0" />
+                                    </font>
+                                </Button>
+                        <Label fx:id="fxLabelPasswordForgotten" onMouseClicked="#fxLabelPasswordForgottenPRESSED" text="Label" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                            </children>
+                            <GridPane.margin>
+                                <Insets right="10.0" />
+                            </GridPane.margin>
+                        </GridPane>
+                        <GridPane maxHeight="333.0" maxWidth="700.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Button fx:id="fxButtonRegisterRegister" minWidth="150.0" mnemonicParsing="false" onAction="#fxButtonRegisterPRESSED" text="Registrieren" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                    <font>
+                                        <Font size="18.0" />
+                                    </font>
+                                </Button>
+                                <GridPane>
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                            <left>
+                                                <Label fx:id="fxLabelRegisterUsername" text="Username" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </Label>
+                                            </left>
+                                            <right>
+                                                <TextField fx:id="fxTextFieldRegisterUsername" onKeyReleased="#fxTextFieldRegisterKeyPRESSED" styleClass="text-input" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </TextField>
+                                            </right>
+                                        </BorderPane>
+                                        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                            <left>
+                                                <Label fx:id="fxLabelRegisterFirstName" text="Vorname" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </Label>
+                                            </left>
+                                            <right>
+                                                <TextField fx:id="fxTextFieldRegisterFirstName" onKeyReleased="#fxTextFieldRegisterKeyPRESSED" styleClass="text-input" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </TextField>
+                                            </right>
+                                        </BorderPane>
+                                        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <left>
+                                                <Label fx:id="fxLabelRegisterLastName" text="Nachname" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                    <padding>
+                                                        <Insets left="10.0" />
+                                                    </padding>
+                                                </Label>
+                                            </left>
+                                            <right>
+                                                <TextField fx:id="fxTextFieldRegisterLastName" onKeyReleased="#fxTextFieldRegisterKeyPRESSED" styleClass="text-input" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </TextField>
+                                            </right>
+                                        </BorderPane>
+                                        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                            <left>
+                                                <Label fx:id="fxLabelRegisterEmail" text="E-Mail" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </Label>
+                                            </left>
+                                            <right>
+                                                <TextField fx:id="fxTextFieldRegisterEmail" onKeyReleased="#fxTextFieldRegisterKeyPRESSED" styleClass="text-input" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </TextField>
+                                            </right>
+                                        </BorderPane>
+                                        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
+                                            <left>
+                                                <Label fx:id="fxLabelRegisterPassword1" text="Passwort" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </Label>
+                                            </left>
+                                            <right>
+                                                <PasswordField fx:id="fxPasswordFieldRegisterPassword1" onKeyReleased="#fxTextFieldRegisterKeyPRESSED" styleClass="text-input" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </PasswordField>
+                                            </right>
+                                        </BorderPane>
+                                        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                            <left>
+                                                <Label fx:id="fxLabelRegisterPassword2" text="Passwort" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                    <padding>
+                                                        <Insets left="10.0" />
+                                                    </padding>
+                                                </Label>
+                                            </left>
+                                            <right>
+                                                <PasswordField fx:id="fxPasswordFieldRegisterPassword2" onKeyReleased="#fxTextFieldRegisterKeyPRESSED" styleClass="text-input" BorderPane.alignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0" />
+                                                    </font>
+                                                </PasswordField>
+                                            </right>
+                                        </BorderPane>
+                                    </children>
+                                </GridPane>
+                            </children>
+                            <GridPane.margin>
+                                <Insets right="20.0" />
+                            </GridPane.margin>
+                        </GridPane>
+                    </children>
+                </GridPane>
+            </center>
+            <top>
+                <ImageView fx:id="fxImageViewHeader" fitWidth="1080.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                    <image>
+                        <Image url="@media/header.png" />
+                    </image>
+                    <viewport>
+                        <Rectangle2D />
+                    </viewport>
+                </ImageView>
+            </top>
+        </BorderPane>
+    </children>
+</AnchorPane>

@@ -1,0 +1,19 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+
+}
+
+.standardDialog > *.label.content{
+    -fx-font-size: 16px;
+}
+
+.standardDialog:header *.header-panel *.label{
+    -fx-font-size: 18px;
+}
+
+.standardDialog > .dialog-pane > .button-bar {
+    -fx-font-size: 18px;
+}

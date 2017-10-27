@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorPane" stylesheets="@CSSGame.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="guiGame.FXMLGameController">
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <center>
+                <GridPane BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="45.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+                            <bottom>
+                                <TextField fx:id="fxTextFieldChat" onKeyReleased="#fxTextFieldChatKeyPressed" BorderPane.alignment="CENTER">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                    <BorderPane.margin>
+                                        <Insets bottom="10.0" right="10.0" />
+                                    </BorderPane.margin>
+                                </TextField>
+                            </bottom>
+                            <center>
+                                <ScrollPane fx:id="scrollpane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                    <content>
+                                        <TextFlow fx:id="fxTextFlowChat">
+                                            <padding>
+                                                <Insets right="10.0" />
+                                            </padding>
+                                        </TextFlow>
+                                    </content>
+                                    <BorderPane.margin>
+                                        <Insets />
+                                    </BorderPane.margin>
+                                </ScrollPane>
+                            </center>
+                        </BorderPane>
+                        <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <TextFlow fx:id="fxTextFlowUsernameAndStatus" prefHeight="200.0" prefWidth="200.0">
+                           <padding>
+                              <Insets left="10.0" top="10.0" />
+                           </padding></TextFlow>
+                     </content>
+                        </ScrollPane>
+                        <BorderPane GridPane.columnIndex="1">
+                            <center>
+                                <GridPane fx:id="fxGridPaneGamefield" maxHeight="300.0" maxWidth="300.0" BorderPane.alignment="CENTER">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                </GridPane>
+                            </center>
+                            <bottom>
+                                <TextFlow fx:id="fxTextFlowInstructions" styleClass="text-flow" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                                    <BorderPane.margin>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                                    </BorderPane.margin>
+                                </TextFlow>
+                            </bottom>
+                        </BorderPane>
+                    </children>
+                </GridPane>
+            </center>
+            <top>
+                <GridPane minHeight="50.0" BorderPane.alignment="TOP_CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Button fx:id="fxButtonBack" mnemonicParsing="false" onAction="#fxButtonBackPressed" text="Zurück zur Lobby">
+                            <GridPane.margin>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </GridPane.margin>
+                            <font>
+                                <Font size="16.0" />
+                            </font>
+                        </Button>
+                        <TextFlow fx:id="fxTextFlowHeadline" styleClass="text-flow" textAlignment="CENTER" GridPane.columnIndex="1">
+                            <GridPane.margin>
+                                <Insets top="10.0" />
+                            </GridPane.margin>
+                        </TextFlow>
+                    </children>
+                </GridPane>
+            </top>
+        </BorderPane>
+    </children>
+</AnchorPane>
