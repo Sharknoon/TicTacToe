@@ -1,4 +1,4 @@
-![Alt text](https://github.com/Sharknoon/TicTacToe/raw/master/TicTacToeClient/src/main/resources/header.png?raw=true "TicTacToe")
+![Alt text](/TicTacToe/header.png?raw=true "TicTacToe")
 
 Hello guys,
 this is my own litte game, Tic Tac Toe. Its very simple to play, but it has full online multiplayer ☺. There is a launcher, where you can create an account (even with confirmation emails so no more .kreps emails) or log you in.
@@ -15,4 +15,18 @@ Josua Frank aka Sharknoon
 
 Code Overview:
 
-![Alt text](/Overview.png?raw=true "Code Overview")
+![Alt text](/TicTacToe/Overview.png?raw=true "Code Overview")
+
+Client Screenshots:
+
+The Launcher, where the players can log in or register a new account
+![Alt text](/TicTacToe/launcher.png?raw=true "Launcher")
+
+The Lobby, where the players can chat, see the statistics and challenge other people
+![Alt text](/TicTacToe/lobby.png?raw=true "Lobby")
+
+The game itself, where the two players can play a game while others are watching
+![Alt text](/TicTacToe/game.png?raw=true "Game")
+
+This is what the Server of the game looks like
+![Alt text](/TicTacToe/server.png?raw=true "Server")
